@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surpresa de Aniversário para Liliazinha!</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #560727; /* Lavanda claro */
+            color: #9e00ed; /* Azul índigo */
+            text-align: center;
+            flex-direction: column;
+            padding: 20px; /* Adicionado para garantir padding em telas pequenas */
+            box-sizing: border-box; /* Garante que padding não aumente o tamanho total */
+        }
+        .call-to-action-container {
+            /* Container para a mensagem e o botão de "clique aqui" */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh; /* Ocupa a altura total da tela */
+            width: 100%;
+            position: absolute; /* Posiciona sobre o resto, mas será escondido */
+            top: 0;
+            left: 0;
+            background-color: #560727; /* Mesma cor de fundo do body */
+            transition: opacity 1s ease-in-out; /* Transição para sumir */
+        }
+        .call-to-action-container.hidden-display {
+            display: none; /* Esconde completamente após a transição */
+        }
+        .call-to-action {
+            background-color: #a913ff; /* Azul primário */
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.2em;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Adiciona transição de transformação */
+            text-decoration: none;
+            margin-top: 20px; /* Espaço entre o texto e o botão */
+        }
+        .call-to-action:hover {
+            background-color: #5d0491;
+            transform: translateY(-2px); /* Efeito sutil ao passar o mouse */
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+            box-sizing: border-box;
+        }
+        .initial-card {
+        background-color: #fff; /* Fundo branco, como o outro cartão */
+        border-radius: 15px; /* Bordas arredondadas */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra suave */
+        padding: 40px; /* Espaçamento interno */
+        max-width: 600px; /* Largura máxima, igual ao outro cartão */
+        width: 90%; /* Largura responsiva */
+        box-sizing: border-box; /* Garante que padding não aumente o tamanho total */
+        display: flex; /* Para centralizar o conteúdo */
+        flex-direction: column; /* Conteúdo em coluna */
+        align-items: center; /* Centraliza horizontalmente */
+        justify-content: center; /* Centraliza verticalmente */
+        min-height: 250px; /* Altura mínima para o "cartão inicial" */
+        text-align: center; /* Centraliza o texto */
+        animation: fadeIn 1s ease-in-out; /* Adiciona uma animação de fade-in */
+    }
+
+    /* Adicione este keyframes se ainda não tiver, para a animação fadeIn */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+        h1 {
+            color: #c2185b; /* Rosa choque */
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .signature {
+            font-style: italic;
+            margin-top: 30px;
+            font-size: 1.1em;
+            color: #7b1fa2;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .hidden {
+            display: none;
+        }
+
+        /* Responsividade para fontes */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+            p {
+                font-size: 1em;
+            }
+            .call-to-action {
+                font-size: 1em;
+                padding: 12px 25px;
+            }
+        }
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2em;
+            }
+            .card {
+                padding: 25px;
+            }
+        }
+
+        .confetti-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none; /* Permite que interações passem para o cartão */
+        }
+        .confetti {
+            width: 10px;
+            height: 10px;
+            background-color: #f06292; /* Rosa padrão, será alterado */
+            border-radius: 50%;
+            opacity: 0;
+            position: absolute;
+            animation: fall 3s linear infinite, spin 2s linear infinite;
+        }
+        @keyframes fall {
+            0% { top: -20px; opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Variações de cores para os confetes */
+        .confetti:nth-child(3n+1) { background-color: #4dd0e1; } /* Ciano */
+        .confetti:nth-child(3n+2) { background-color: #aed581; } /* Verde claro */
+        .confetti:nth-child(3n+3) { background-color: #ffb74d; } /* Laranja */
+    </style>
+</head>
+<body>
+    <div id="callToActionScreen" class="call-to-action-container">
+    <div class="initial-card"> <h2>Clique no botão abaixo!</h2>
+        <button id="showCardButton" class="call-to-action">Clique Aqui!</button>
+    </div> </div>
+
+    </div>
+
+    <div id="birthdayCard" class="card hidden">
+        <h1>🎉 Feliz Aniversário, Liliazinha! 🎉</h1>
+
+        <p>Minha querida amiga,</p>
+
+        <p>Neste dia tão especial, quero te desejar toda a felicidade do mundo, muita paz, saúde, sucesso e que todos os seus sonhos se realizem. É um privilégio ter você na minha vida.</p>
+
+        <p>Sinto muita saudades sua, saiba que eu tenho um amor muito grande por você e eu sempre estarei aqui por ti e para ti!</p>
+        <p>Que seu dia seja repleto de alegria, Deus abençoe sempre seu coração e guie você durante toda esta vida.</p>
+        <p>Eu te amo, liliazinha!! e Deus te ama também!!!</p>
+
+        <p class="signature">Com todo o meu carinho,<br>Miguel</p>
+        <div id="confettiContainer" class="confetti-container"></div>
+    </div>
+
+    <script>
+        const showCardButton = document.getElementById('showCardButton');
+        const birthdayCard = document.getElementById('birthdayCard');
+        const callToActionScreen = document.getElementById('callToActionScreen');
+
+        showCardButton.addEventListener('click', function() {
+            // Oculta a tela de "clique aqui"
+            callToActionScreen.style.opacity = 0;
+            setTimeout(() => {
+                callToActionScreen.classList.add('hidden-display'); // Esconde completamente após a transição
+            }, 1000); // Tempo igual à transição de opacidade
+
+            // Mostra o cartão
+            birthdayCard.classList.remove('hidden');
+            setTimeout(() => {
+                birthdayCard.style.opacity = 1;
+                birthdayCard.style.transform = 'translateY(0)';
+            }, 50); // Pequeno delay para a transição do cartão funcionar
+        });
+    </script>
+    <script>
+        // ... (seu script existente para o botão e o cartão deve estar aqui) ...
+
+        const confettiContainer = document.getElementById('confettiContainer');
+        const numberOfConfetti = 100; // Ajuste para mais ou menos confetes
+
+        function createConfetti() {
+            // Certifica-se de que o birthdayCard já está visível e com dimensões para posicionar os confetes corretamente
+            const cardRect = birthdayCard.getBoundingClientRect(); 
+            confettiContainer.innerHTML = ''; // Limpa confetes antigos se houver
+            for (let i = 0; i < numberOfConfetti; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                // Posiciona os confetes dentro da largura do cartão
+                confetti.style.left = Math.random() * cardRect.width + 'px';
+                // Faz os confetes começarem de posições variadas acima do cartão
+                confetti.style.top = Math.random() * cardRect.height * 0.2 - 20 + 'px'; 
+                confetti.style.animationDelay = Math.random() * 2 + 's'; // Variedade no início da queda
+                confetti.style.animationDuration = Math.random() * 2 + 2 + 's'; // Variedade na duração da queda
+                confetti.style.transform = `scale(${Math.random() * 0.8 + 0.2})`; // Tamanhos variados
+                confettiContainer.appendChild(confetti);
+            }
+        }
+
+        // Modifique seu event listener do botão para chamar createConfetti()
+        showCardButton.addEventListener('click', function() {
+            callToActionScreen.style.opacity = 0;
+            setTimeout(() => {
+                callToActionScreen.classList.add('hidden-display');
+            }, 1000);
+
+            birthdayCard.classList.remove('hidden');
+            setTimeout(() => {
+                birthdayCard.style.opacity = 1;
+                birthdayCard.style.transform = 'translateY(0)';
+                createConfetti(); // <-- Esta linha é a que chama a função dos confetes!
+            }, 50);
+        });
+    </script>
+</body>
+</html>
